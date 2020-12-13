@@ -1,7 +1,7 @@
 package fr.esgi.ticketapi.usecase.users;
 
 import fr.esgi.ticketapi.core.entity.User;
-import fr.esgi.ticketapi.core.usecase.users.GetAllUsers;
+import fr.esgi.ticketapi.core.usecase.users.GetUsers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,14 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class getAllUsers {
 
-    GetAllUsers getAllUsers = new GetAllUsers();
+    GetUsers getAllUsers = new GetUsers();
     List<User> resultTest = new ArrayList<>();
 
     @BeforeEach
     public void setUp() {
         resultTest = new ArrayList<>();
-        resultTest.add(new User(1,"James","BERTHO","jbertho@myges.fr"));
-        resultTest.add(new User(2,"Masataka","ISHII","mishii@myges.fr"));
+        resultTest.add(new User(1,"James","BERTHO","jbertho@myges.fr",1));
+        resultTest.add(new User(2,"Masataka","ISHII","mishii@myges.fr",1));
     }
 
     @Test

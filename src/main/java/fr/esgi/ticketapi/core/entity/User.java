@@ -7,16 +7,15 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    private Integer roleId;
 
-    public User(Integer id, String firstName, String lastName, String email) {
+    public User(Integer id, String firstName, String lastName, String email, Integer roleId) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.roleId = roleId;
     }
-
-
-
 
     @Override
     public boolean equals(Object o) {
