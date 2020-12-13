@@ -11,7 +11,7 @@ public class TRole {
 
     private String name;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany()
     private Collection<TUser> users;
 
     public Integer getId() {
@@ -36,5 +36,13 @@ public class TRole {
 
     public void settUser(Collection<TUser> tUser) {
         this.users = tUser;
+    }
+
+    public Collection<TUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Collection<TUser> users) {
+        this.users = users;
     }
 }

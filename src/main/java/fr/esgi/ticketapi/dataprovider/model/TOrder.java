@@ -43,4 +43,12 @@ public class TOrder {
     public void setUser(TUser user) {
         this.user = user;
     }
+
+    public Collection<TOrderState> getOrdersStates() {
+        return ordersStates;
+    }
+
+    public void setOrdersStates(Collection<TOrderState> ordersStates) {
+        this.ordersStates = ordersStates;
+    }
 }
