@@ -11,7 +11,7 @@ public class TRole {
 
     private String name;
 
-    @OneToMany()
+    @OneToMany(mappedBy = "role")
     private Collection<TUser> users;
 
     public Integer getId() {

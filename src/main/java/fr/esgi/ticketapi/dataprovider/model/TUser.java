@@ -1,9 +1,6 @@
 package fr.esgi.ticketapi.dataprovider.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class TUser {
@@ -18,7 +15,8 @@ public class TUser {
 
     private String email;
 
-    private Integer roleId;
+    @ManyToOne
+    private TRole role;
 
     public Integer getId() {
         return id;
@@ -52,11 +50,11 @@ public class TUser {
         this.email = email;
     }
 
-    public Integer getRoleId() {
-        return roleId;
+    public TRole getRole() {
+        return role;
     }
 
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public void setRole(TRole role) {
+        this.role = role;
     }
 }
