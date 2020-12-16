@@ -2,9 +2,9 @@ package fr.esgi.ticketapi.infrastructure.dataprovider.model;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
+@Table(name = "ticket")
 public class Order {
 
     @Id
@@ -54,4 +54,6 @@ public class Order {
     public fr.esgi.ticketapi.core.entity.Order asOrderEntity() {
         return new fr.esgi.ticketapi.core.entity.Order(this.id, this.price, this.user.getId());
     }
+
+
 }
