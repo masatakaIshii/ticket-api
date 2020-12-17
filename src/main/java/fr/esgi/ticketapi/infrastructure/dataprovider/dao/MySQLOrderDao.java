@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Service("MySQLOrderDao")
 public class MySQLOrderDao implements OrderDao {
 
     private final OrderRepository orderRepository;
@@ -25,6 +25,4 @@ public class MySQLOrderDao implements OrderDao {
                 .map(order -> order.asOrderEntity())
                 .collect(Collectors.toList());
     }
-
-
 }
