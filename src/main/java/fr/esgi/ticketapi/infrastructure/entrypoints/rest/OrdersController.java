@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrdersController {
 
-    private GetOrders getOrders;
+    private final GetOrders getOrders;
 
     public OrdersController(GetOrders getOrders) {
         this.getOrders = getOrders;
@@ -20,9 +20,7 @@ public class OrdersController {
 
     @GetMapping("")
     public List<Order> getAllOrders() {
-        List<Order> orders = getOrders.execute();
-        System.out.println(orders);
-        return orders;
+        return getOrders.execute();
     }
 
 }

@@ -52,7 +52,7 @@ public class StateController {
 
     @PostMapping("/keep/{id}")
     public OrderState changeOrderStateToKeep(@PathVariable(name = "id") Integer orderId) {
-        return null;
+        return changeOrderStateToKeep.execute(orderId);
     }
 
     @PostMapping("/refund/{id}")

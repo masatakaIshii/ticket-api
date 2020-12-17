@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class GetOrders {
 
-    private OrderDao orderDao;
+    private final OrderDao orderDao;
 
     public GetOrders(OrderDao orderDao) {
         this.orderDao = orderDao;
