@@ -1,6 +1,9 @@
 package fr.esgi.ticketapi.infrastructure.dataprovider.model;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -15,7 +18,8 @@ public class OrderState {
     @ManyToOne
     private State state;
 
-    private Date date;
+    @CreatedDate
+    private LocalDate date;
 
     public Integer getId() {
         return id;
@@ -41,11 +45,11 @@ public class OrderState {
         this.state = state;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

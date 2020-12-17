@@ -7,5 +7,5 @@ public interface OrderStateDao {
 
     OrderState changeOrderStateToRefund(Integer orderId);
 
-    boolean deleteOrdersStates(Integer orderId);
+    void deleteOrdersStates();
 }

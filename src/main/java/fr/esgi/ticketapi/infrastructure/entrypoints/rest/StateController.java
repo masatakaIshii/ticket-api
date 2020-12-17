@@ -61,7 +61,8 @@ public class StateController {
     }
 
     @DeleteMapping("")
-    public void deleteOrdersStates(@PathVariable(name = "id") Integer orderId) {
+    public void deleteOrdersStates() {
+        deleteOrdersStates.execute();
     }
 
 }

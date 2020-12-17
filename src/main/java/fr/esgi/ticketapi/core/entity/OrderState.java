@@ -1,19 +1,19 @@
 package fr.esgi.ticketapi.core.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class OrderState implements Serializable {
     private Integer id;
     private Integer orderId;
-    private Integer StateId;
-    private Date date;
+    private Integer stateId;
+    private LocalDate date;
 
-    public OrderState(Integer id, Integer orderId, Integer stateId, Date date) {
+    public OrderState(Integer id, Integer orderId, Integer stateId, LocalDate date) {
         this.id = id;
         this.orderId = orderId;
-        StateId = stateId;
+        this.stateId = stateId;
         this.date = date;
     }
 
@@ -34,18 +34,18 @@ public class OrderState implements Serializable {
     }
 
     public Integer getStateId() {
-        return StateId;
+        return stateId;
     }
 
     public void setStateId(Integer stateId) {
-        StateId = stateId;
+        this.stateId = stateId;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -54,11 +54,11 @@ public class OrderState implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderState that = (OrderState) o;
-        return Objects.equals(id, that.id) && Objects.equals(orderId, that.orderId) && Objects.equals(StateId, that.StateId) && Objects.equals(date, that.date);
+        return Objects.equals(id, that.id) && Objects.equals(orderId, that.orderId) && Objects.equals(stateId, that.stateId) && Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, orderId, StateId, date);
+        return Objects.hash(id, orderId, stateId, date);
     }
 }

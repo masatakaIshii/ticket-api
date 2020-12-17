@@ -14,6 +14,6 @@ public class ChangeOrderStateToKeep {
     }
 
     public OrderState execute(Integer orderId) {
-        return null;
+        return this.orderStateDao.changeOrderStateToKeep(orderId);
     }
 }
