@@ -12,9 +12,6 @@ public class State {
 
     private String name;
 
-    @OneToMany(mappedBy = "state")
-    private Collection<OrderState> ordersStates;
-
     public Integer getId() {
         return id;
     }
@@ -29,13 +26,5 @@ public class State {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Collection<OrderState> getOrdersStates() {
-        return ordersStates;
-    }
-
-    public void setOrdersStates(Collection<OrderState> ordersStates) {
-        this.ordersStates = ordersStates;
     }
 }

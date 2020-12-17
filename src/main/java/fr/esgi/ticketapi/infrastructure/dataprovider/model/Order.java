@@ -13,11 +13,8 @@ public class Order {
 
     private Integer price;
 
-    @OneToMany(mappedBy = "order")
-    private Collection<OrderState> ordersStates;
-
-    @ManyToOne
-    private User user;
+    @Column(name = "user_id")
+    private Integer userId;
 
     public Integer getId() {
         return id;
@@ -35,24 +32,16 @@ public class Order {
         this.price = price;
     }
 
-    public User getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Collection<OrderState> getOrdersStates() {
-        return ordersStates;
-    }
-
-    public void setOrdersStates(Collection<OrderState> ordersStates) {
-        this.ordersStates = ordersStates;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public fr.esgi.ticketapi.core.entity.Order asOrderEntity() {
-        return new fr.esgi.ticketapi.core.entity.Order(this.id, this.price, this.user.getId());
+        return new fr.esgi.ticketapi.core.entity.Order(this.id, this.price, this.userId);
     }
 
 

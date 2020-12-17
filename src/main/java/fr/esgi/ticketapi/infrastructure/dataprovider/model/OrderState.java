@@ -12,11 +12,11 @@ public class OrderState {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
-    private Order order;
+    @Column(name = "order_id")
+    private Integer orderId;
 
-    @ManyToOne
-    private State state;
+    @Column(name = "state_id")
+    private Integer stateId;
 
     @CreatedDate
     private LocalDate date;
@@ -29,20 +29,20 @@ public class OrderState {
         this.id = id;
     }
 
-    public Order getOrder() {
-        return order;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
-    public State getState() {
-        return state;
+    public Integer getStateId() {
+        return stateId;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setStateId(Integer stateId) {
+        this.stateId = stateId;
     }
 
     public LocalDate getDate() {
