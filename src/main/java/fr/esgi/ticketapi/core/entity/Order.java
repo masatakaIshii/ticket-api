@@ -15,6 +15,10 @@ public class Order implements Serializable {
         this.userId = userId;
     }
 
+    public Order() {
+
+    }
+
     public Integer getId() {
         return id;
     }
