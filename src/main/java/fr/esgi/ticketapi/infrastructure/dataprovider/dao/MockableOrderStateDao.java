@@ -42,7 +42,21 @@ public class MockableOrderStateDao implements OrderStateDao {
     //TODO
     @Override
     public OrderState changeOrderStateToRefund(Integer orderId) {
-        return null;
+        //TODO change when get current will be done
+        //OrderState lastOrderState = this.getCurrentOrderState(orderId);
+        OrderState currentOrderState = new OrderState(6, orderId, State.KEEP, LocalDate.now().minusDays(5));
+
+        if (currentOrderState.getStateId() == State.REFUND) {
+            return currentOrderState;
+        }
+
+        fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState newOrderState =
+                this.orderStateRepository.save(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(
+                        currentOrderState.getOrderId(),
+                        State.REFUND
+                ));
+
+        return new OrderState(newOrderState.getId(), newOrderState.getOrderId(), newOrderState.getStateId(), newOrderState.getDate());
     }
 
     @Override

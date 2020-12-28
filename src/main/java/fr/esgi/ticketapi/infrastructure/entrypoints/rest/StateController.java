@@ -57,7 +57,7 @@ public class StateController {
 
     @PostMapping("/refund/{id}")
     public OrderState changeOrderStateToRefund(@PathVariable(name = "id") Integer orderId) {
-        return null;
+        return changeOrderStateToRefund.execute(orderId);
     }
 
     @DeleteMapping("")

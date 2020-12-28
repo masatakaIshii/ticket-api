@@ -14,30 +14,30 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class ChangeOrderStateToKeepTest {
+class ChangeOrderStateToRefundTest {
 
-    ChangeOrderStateToKeep changeOrderStateToKeep;
+    ChangeOrderStateToRefund changeOrderStateToRefund;
     OrderState orderStateTested;
 
     @Mock
     OrderStateDao mockOrderStateDao;
 
     @BeforeEach
-    public void setUp() {
-        orderStateTested = new OrderState(3, 2, State.KEEP, LocalDate.now().minusDays(5));
-        changeOrderStateToKeep = new ChangeOrderStateToKeep(mockOrderStateDao);
+    public void setup() {
+        orderStateTested = new OrderState(3, 2, State.REFUND, LocalDate.now().minusDays(5));
+        changeOrderStateToRefund = new ChangeOrderStateToRefund(mockOrderStateDao);
     }
 
     @Test
     void should_call_order_state_dao_once() {
-        changeOrderStateToKeep.execute(1);
-        Mockito.verify(mockOrderStateDao, Mockito.atLeastOnce()).changeOrderStateToKeep(1);
+        changeOrderStateToRefund.execute(1);
+        Mockito.verify(mockOrderStateDao, Mockito.atLeastOnce()).changeOrderStateToRefund(1);
     }
 
     @Test
     void should_returns_what_dao_returns() {
-        Mockito.when(mockOrderStateDao.changeOrderStateToKeep(orderStateTested.getOrderId())).thenReturn(orderStateTested);
-        OrderState orderState = changeOrderStateToKeep.execute(orderStateTested.getOrderId());
+        Mockito.when(mockOrderStateDao.changeOrderStateToRefund(orderStateTested.getOrderId())).thenReturn(orderStateTested);
+        OrderState orderState = changeOrderStateToRefund.execute(orderStateTested.getOrderId());
         assertEquals(orderStateTested, orderState);
     }
 
