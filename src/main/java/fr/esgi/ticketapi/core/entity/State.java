@@ -7,7 +7,7 @@ public class State implements Serializable {
     private Integer id;
     private String name;
 
-    public static final int REFUND = 0;
+    public static final int REFUND = 2;
     public static final int KEEP = 1;
 
     public State(Integer id, String name) {

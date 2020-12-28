@@ -2,9 +2,11 @@ package fr.esgi.ticketapi.infrastructure.dataprovider.dao;
 
 import fr.esgi.ticketapi.core.dao.OrderStateDao;
 import fr.esgi.ticketapi.core.entity.OrderState;
+import fr.esgi.ticketapi.core.entity.State;
 import fr.esgi.ticketapi.infrastructure.dataprovider.repository.OrderStateRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,19 +19,24 @@ public class MockableOrderStateDao implements OrderStateDao {
         this.orderStateRepository = orderStateRepository;
     }
 
-    //TODO
+
     @Override
     public OrderState changeOrderStateToKeep(Integer orderId) {
-        //Get current state
-        //fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState currentOrderState = ...;       //insert s'il a un statut différent
-        //Il faut ue enumeration KEEP_STATUT QUELQUE PART A MON AVIS
-        /*if (currentOrderState.getStateId() == State.REFUND) {
-            currentOrderState.setStateId(1);
-            fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState newOrderState
-                    = this.orderStateRepository.save(currentOrderState);
-        }*/
+        //TODO change when get current will be done
+        //OrderState lastOrderState = this.getCurrentOrderState(orderId);
+        OrderState currentOrderState = new OrderState(3, orderId, State.REFUND, LocalDate.now().minusDays(5));
 
-        return null;
+        if (currentOrderState.getStateId() == State.KEEP) {
+            return currentOrderState;
+        }
+
+        fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState newOrderState =
+                this.orderStateRepository.save(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(
+                        currentOrderState.getOrderId(),
+                        State.KEEP
+                ));
+
+        return new OrderState(newOrderState.getId(), newOrderState.getOrderId(), newOrderState.getStateId(), newOrderState.getDate());
     }
 
     //TODO

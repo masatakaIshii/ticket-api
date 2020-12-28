@@ -2,6 +2,7 @@ package fr.esgi.ticketapi.usecase.orderState;
 
 import fr.esgi.ticketapi.core.dao.OrderStateDao;
 import fr.esgi.ticketapi.core.entity.OrderState;
+import fr.esgi.ticketapi.core.entity.State;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,14 +17,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class ChangeOrderStateToKeepTest {
 
     ChangeOrderStateToKeep changeOrderStateToKeep;
-    OrderState orderStateTested;
+    OrderState orderStateKept;
+    OrderState orderStateAlreadyKept;
+    OrderState orderStateRefund;
 
     @Mock
     OrderStateDao mockOrderStateDao;
 
     @BeforeEach
     public void setUp() {
-        orderStateTested = new OrderState(2, 1, 1, LocalDate.of(2020, 12, 12));
+        orderStateRefund = new OrderState(1, 1, State.REFUND, LocalDate.now().minusDays(5));
+        orderStateKept = new OrderState(2, 1, State.KEEP, LocalDate.now());
+        orderStateAlreadyKept = new OrderState(3, 2, State.KEEP, LocalDate.now().minusDays(5));
         changeOrderStateToKeep = new ChangeOrderStateToKeep(mockOrderStateDao);
     }
 
@@ -34,11 +39,10 @@ class ChangeOrderStateToKeepTest {
     }
 
     @Test
-    void should_return_new_order_state() {
-        Mockito.when(mockOrderStateDao.changeOrderStateToKeep(Mockito.anyInt())).thenReturn(orderStateTested);
-        OrderState orderState = changeOrderStateToKeep.execute(orderStateTested.getId());
-        assertEquals(orderStateTested, orderState);
+    void should_return_order_state_keep_if_refund_before() {
+        Mockito.when(mockOrderStateDao.changeOrderStateToKeep(Mockito.anyInt())).thenReturn(orderStateAlreadyKept);
+        OrderState orderState = changeOrderStateToKeep.execute(orderStateAlreadyKept.getOrderId());
+        assertEquals(orderStateAlreadyKept, orderState);
     }
-
 
 }

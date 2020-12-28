@@ -4,7 +4,6 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 public class OrderState {
@@ -20,6 +19,22 @@ public class OrderState {
 
     @CreatedDate
     private LocalDate date;
+
+    public OrderState(Integer orderId, Integer stateId) {
+        this.orderId = orderId;
+        this.stateId = stateId;
+    }
+
+    public OrderState(Integer id, Integer orderId, Integer stateId, LocalDate date) {
+        this.id = id;
+        this.orderId = orderId;
+        this.stateId = stateId;
+        this.date = date;
+    }
+
+    public OrderState() {
+
+    }
 
     public Integer getId() {
         return id;
