@@ -19,41 +19,20 @@ public class MockableOrderStateDao implements OrderStateDao {
         this.orderStateRepository = orderStateRepository;
     }
 
-
     @Override
-    public OrderState changeOrderStateToKeep(Integer orderId) {
+    public OrderState changeOrderState(Integer orderId, int stateId) {
         //TODO change when get current will be done
         //OrderState lastOrderState = this.getCurrentOrderState(orderId);
-        OrderState currentOrderState = new OrderState(3, orderId, State.REFUND, LocalDate.now().minusDays(5));
+        OrderState currentOrderState = new OrderState(3, orderId, State.KEEP, LocalDate.now().minusDays(5));
 
-        if (currentOrderState.getStateId() == State.KEEP) {
+        if (currentOrderState.getStateId() == stateId) {
             return currentOrderState;
         }
 
         fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState newOrderState =
                 this.orderStateRepository.save(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(
                         currentOrderState.getOrderId(),
-                        State.KEEP
-                ));
-
-        return new OrderState(newOrderState.getId(), newOrderState.getOrderId(), newOrderState.getStateId(), newOrderState.getDate());
-    }
-
-    //TODO
-    @Override
-    public OrderState changeOrderStateToRefund(Integer orderId) {
-        //TODO change when get current will be done
-        //OrderState lastOrderState = this.getCurrentOrderState(orderId);
-        OrderState currentOrderState = new OrderState(6, orderId, State.KEEP, LocalDate.now().minusDays(5));
-
-        if (currentOrderState.getStateId() == State.REFUND) {
-            return currentOrderState;
-        }
-
-        fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState newOrderState =
-                this.orderStateRepository.save(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(
-                        currentOrderState.getOrderId(),
-                        State.REFUND
+                        stateId
                 ));
 
         return new OrderState(newOrderState.getId(), newOrderState.getOrderId(), newOrderState.getStateId(), newOrderState.getDate());

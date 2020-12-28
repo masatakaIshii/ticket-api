@@ -18,12 +18,8 @@ class MockableOrderStateDaoTest {
 
     MockableOrderStateDao mockableOrderStateDao;
 
-    OrderState orderStateKept;
     OrderState orderStateAlreadyKept;
-    OrderState orderStateAlreadyRefund;
-    fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState newOrderStateKept;
     fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState newOrderStateRefund;
-    OrderState orderStateRefund;
     OrderState orderStateKeptForRefundTest;
     OrderState orderStateRefundForRefundTest;
 
@@ -34,41 +30,22 @@ class MockableOrderStateDaoTest {
     public void setup() {
         mockableOrderStateDao = new MockableOrderStateDao(mockOrderStateRepository);
 
-        orderStateRefund = new OrderState(1, 1, State.REFUND, LocalDate.now().minusDays(5));
-        orderStateKept = new OrderState(2, 1, State.KEEP, LocalDate.now());
-        newOrderStateKept = new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(2, 1, State.KEEP, LocalDate.now());
         orderStateAlreadyKept = new OrderState(3, 2, State.KEEP, LocalDate.now().minusDays(5));
-
-        orderStateAlreadyRefund = new OrderState(5, 3, State.REFUND, LocalDate.now().minusDays(5));
         orderStateKeptForRefundTest = new OrderState(6, 3, State.KEEP, LocalDate.now().minusDays(5));
         orderStateRefundForRefundTest = new OrderState(7, 3, State.REFUND, LocalDate.now());
         newOrderStateRefund = new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(7, 3, State.REFUND, LocalDate.now());
-
     }
 
     @Test
-    public void changeStateToKeep_should_do_nothing_if_already_kept() {
-        OrderState result = mockableOrderStateDao.changeOrderStateToKeep(orderStateAlreadyKept.getOrderId());
+    public void changeState_should_do_nothing_if_already_same_state() {
+        OrderState result = mockableOrderStateDao.changeOrderState(orderStateAlreadyKept.getOrderId(), State.KEEP);
         assertEquals(orderStateAlreadyKept, result);
     }
 
     @Test
-    public void changeStateToKeep_should_change_state_if_refund() {
-        Mockito.when(mockOrderStateRepository.save(Mockito.any(fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState.class))).thenReturn(newOrderStateKept);
-        OrderState result = mockableOrderStateDao.changeOrderStateToKeep(orderStateRefund.getOrderId());
-        assertEquals(orderStateKept, result);
-    }
-
-    @Test
-    public void changeStateToRefund_should_do_nothing_if_already_refund() {
-        OrderState result = mockableOrderStateDao.changeOrderStateToRefund(orderStateAlreadyRefund.getOrderId());
-        assertEquals(orderStateAlreadyRefund, result);
-    }
-
-    @Test
-    public void changeStateToRefund_should_change_state_if_kept() {
+    public void changeState_should_change_state_if_different_state() {
         Mockito.when(mockOrderStateRepository.save(Mockito.any(fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState.class))).thenReturn(newOrderStateRefund);
-        OrderState result = mockableOrderStateDao.changeOrderStateToRefund(orderStateKeptForRefundTest.getOrderId());
+        OrderState result = mockableOrderStateDao.changeOrderState(orderStateKeptForRefundTest.getOrderId(), State.REFUND);
         assertEquals(orderStateRefundForRefundTest, result);
     }
 

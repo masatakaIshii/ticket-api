@@ -5,9 +5,7 @@ import fr.esgi.ticketapi.core.entity.OrderState;
 import java.util.List;
 
 public interface OrderStateDao {
-    OrderState changeOrderStateToKeep(Integer orderId);
-
-    OrderState changeOrderStateToRefund(Integer orderId);
+    OrderState changeOrderState(Integer orderId, int stateId);
 
     void deleteOrdersStates();
 

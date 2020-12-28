@@ -2,6 +2,7 @@ package fr.esgi.ticketapi.usecase.orderState;
 
 import fr.esgi.ticketapi.core.dao.OrderStateDao;
 import fr.esgi.ticketapi.core.entity.OrderState;
+import fr.esgi.ticketapi.core.entity.State;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,6 @@ public class ChangeOrderStateToKeep {
     }
 
     public OrderState execute(Integer orderId) {
-        return this.orderStateDao.changeOrderStateToKeep(orderId);
+        return this.orderStateDao.changeOrderState(orderId, State.KEEP);
     }
 }

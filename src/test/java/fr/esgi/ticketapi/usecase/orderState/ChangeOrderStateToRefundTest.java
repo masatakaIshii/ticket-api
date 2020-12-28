@@ -31,12 +31,12 @@ class ChangeOrderStateToRefundTest {
     @Test
     void should_call_order_state_dao_once() {
         changeOrderStateToRefund.execute(1);
-        Mockito.verify(mockOrderStateDao, Mockito.atLeastOnce()).changeOrderStateToRefund(1);
+        Mockito.verify(mockOrderStateDao, Mockito.atLeastOnce()).changeOrderState(1, State.REFUND);
     }
 
     @Test
     void should_returns_what_dao_returns() {
-        Mockito.when(mockOrderStateDao.changeOrderStateToRefund(orderStateTested.getOrderId())).thenReturn(orderStateTested);
+        Mockito.when(mockOrderStateDao.changeOrderState(orderStateTested.getOrderId(), State.REFUND)).thenReturn(orderStateTested);
         OrderState orderState = changeOrderStateToRefund.execute(orderStateTested.getOrderId());
         assertEquals(orderStateTested, orderState);
     }

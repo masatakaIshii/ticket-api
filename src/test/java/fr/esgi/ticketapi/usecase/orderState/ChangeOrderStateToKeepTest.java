@@ -31,12 +31,12 @@ class ChangeOrderStateToKeepTest {
     @Test
     void should_call_order_state_dao_once() {
         changeOrderStateToKeep.execute(1);
-        Mockito.verify(mockOrderStateDao, Mockito.atLeastOnce()).changeOrderStateToKeep(1);
+        Mockito.verify(mockOrderStateDao, Mockito.atLeastOnce()).changeOrderState(1, State.KEEP);
     }
 
     @Test
     void should_returns_what_dao_returns() {
-        Mockito.when(mockOrderStateDao.changeOrderStateToKeep(orderStateTested.getOrderId())).thenReturn(orderStateTested);
+        Mockito.when(mockOrderStateDao.changeOrderState(orderStateTested.getOrderId(), State.KEEP)).thenReturn(orderStateTested);
         OrderState orderState = changeOrderStateToKeep.execute(orderStateTested.getOrderId());
         assertEquals(orderStateTested, orderState);
     }
