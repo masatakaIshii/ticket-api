@@ -32,12 +32,12 @@ public class StateController {
 
     @GetMapping("")
     public List<OrderState> getStatesOfOrders() {
-        return null;
+        return this.getOrdersStates.execute();
     }
 
     @GetMapping("/{id}")
     public List<OrderState> getStatesOfOneOrder(@PathVariable(name = "id") Integer orderId) {
-        return null;
+        return this.getOrderStates.execute(orderId);
     }
 
     @GetMapping("/current/{id}")
