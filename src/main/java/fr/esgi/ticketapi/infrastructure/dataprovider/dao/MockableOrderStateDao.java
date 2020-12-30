@@ -7,7 +7,13 @@ import fr.esgi.ticketapi.infrastructure.dataprovider.repository.OrderStateReposi
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,5 +61,22 @@ public class MockableOrderStateDao implements OrderStateDao {
         List<fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState> ordersStates = this.orderStateRepository.getAll();
         return ordersStates.stream().map(orderState -> new OrderState(orderState.getId(), orderState.getOrderId(), orderState.getStateId(), orderState.getDate()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderState> getCurrentStateOrders() {
+        return this.orderStateRepository.getAll().stream()
+                .map(orderState -> new OrderState(orderState.getId(), orderState.getOrderId(), orderState.getStateId(), orderState.getDate()))
+                .sorted((orderState1, orderState2) -> orderState2.getDate().compareTo(orderState1.getDate()))
+                .filter(distinctByKey(OrderState::getOrderId))
+                .sorted(Comparator.comparing(OrderState::getId))
+                .collect(Collectors.toList());
+    }
+
+    private static <OrderState> Predicate<OrderState> distinctByKey(
+            Function<? super OrderState, ?> keyExtractor) {
+
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 }
