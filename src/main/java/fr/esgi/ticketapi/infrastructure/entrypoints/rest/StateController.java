@@ -45,7 +45,7 @@ public class StateController {
         return null;
     }
 
-    @GetMapping("/current}")
+    @GetMapping("/current")
     public List<OrderState> getCurrentStateOfOrders() {
         return this.getCurrentStateOrders.execute();
     }
