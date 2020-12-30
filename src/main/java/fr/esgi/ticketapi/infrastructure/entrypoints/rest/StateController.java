@@ -47,7 +47,7 @@ public class StateController {
 
     @GetMapping("/current}")
     public List<OrderState> getCurrentStateOfOrders() {
-        return null;
+        return this.getCurrentStateOrders.execute();
     }
 
     @PostMapping("/keep/{id}")
