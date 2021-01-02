@@ -10,7 +10,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +40,13 @@ class MockableOrderStateDaoTest {
 
     @Test
     public void changeState_should_do_nothing_if_already_same_state() {
+        List<fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState> orderStates = new ArrayList<>();
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(1, 3, State.KEEP, LocalDate.now().minusDays(3)));
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(2, 1, State.REFUND, LocalDate.now().minusDays(3)));
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(3, 2, State.KEEP, LocalDate.now().minusDays(5)));
+
+        Mockito.when(mockOrderStateRepository.getAll()).thenReturn(orderStates);
+
         OrderState result = mockableOrderStateDao.changeOrderState(orderStateAlreadyKept.getOrderId(), State.KEEP);
         assertEquals(orderStateAlreadyKept, result);
     }
@@ -50,6 +56,56 @@ class MockableOrderStateDaoTest {
         Mockito.when(mockOrderStateRepository.save(Mockito.any(fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState.class))).thenReturn(newOrderStateRefund);
         OrderState result = mockableOrderStateDao.changeOrderState(orderStateKeptForRefundTest.getOrderId(), State.REFUND);
         assertEquals(orderStateRefundForRefundTest, result);
+    }
+
+    @Test
+    public void changeState_should_insert_state_if_not_registered_before() {
+        List<fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState> orderStates = new ArrayList<>();
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(1, 3, State.KEEP, LocalDate.now().minusDays(3)));
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(2, 1, State.REFUND, LocalDate.now().minusDays(3)));
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(3, 2, State.REFUND, LocalDate.now().minusDays(3)));
+
+        Mockito.when(mockOrderStateRepository.getAll()).thenReturn(orderStates);
+
+        fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState newOrderState = new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(4, 4, State.REFUND, LocalDate.now());
+
+        OrderState expected = new OrderState(4, 4, State.REFUND, LocalDate.now());
+
+        Mockito.when(mockOrderStateRepository.save(Mockito.any(fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState.class))).thenReturn(newOrderState);
+        OrderState result = mockableOrderStateDao.changeOrderState(orderStateKeptForRefundTest.getOrderId(), State.REFUND);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void getCurrentStateOrderById_should_call_repo_get_all_once() {
+        mockableOrderStateDao.getCurrentStateOfOrderById(1);
+        Mockito.verify(mockOrderStateRepository, Mockito.times(1)).getAll();
+    }
+
+    @Test
+    public void getCurrentStateOrderById_should_return_one_if_exists_in_list() {
+        List<fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState> orderStates = new ArrayList<>();
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(1, 3, State.KEEP, LocalDate.now().minusDays(3)));
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(2, 1, State.REFUND, LocalDate.now().minusDays(3)));
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(3, 2, State.REFUND, LocalDate.now().minusDays(3)));
+
+        Mockito.when(mockOrderStateRepository.getAll()).thenReturn(orderStates);
+
+        OrderState expected = new OrderState(3, 2, State.REFUND, LocalDate.now().minusDays(3));
+
+        assertEquals(expected, mockableOrderStateDao.getCurrentStateOfOrderById(expected.getOrderId()));
+    }
+
+    @Test
+    public void getCurrentStateOrderById_should_return_null_if_not_exists_in_list() {
+        List<fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState> orderStates = new ArrayList<>();
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(1, 3, State.KEEP, LocalDate.now().minusDays(3)));
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(2, 1, State.REFUND, LocalDate.now().minusDays(3)));
+        orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(3, 2, State.REFUND, LocalDate.now().minusDays(3)));
+
+        Mockito.when(mockOrderStateRepository.getAll()).thenReturn(orderStates);
+
+        assertNull(mockableOrderStateDao.getCurrentStateOfOrderById(4));
     }
 
     @Test

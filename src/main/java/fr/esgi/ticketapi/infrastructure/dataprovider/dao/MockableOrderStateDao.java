@@ -2,12 +2,8 @@ package fr.esgi.ticketapi.infrastructure.dataprovider.dao;
 
 import fr.esgi.ticketapi.core.dao.OrderStateDao;
 import fr.esgi.ticketapi.core.entity.OrderState;
-import fr.esgi.ticketapi.core.entity.State;
 import fr.esgi.ticketapi.infrastructure.dataprovider.repository.OrderStateRepository;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -27,21 +23,34 @@ public class MockableOrderStateDao implements OrderStateDao {
 
     @Override
     public OrderState changeOrderState(Integer orderId, int stateId) {
-        //TODO change when get current will be done
-        //OrderState lastOrderState = this.getCurrentOrderState(orderId);
-        OrderState currentOrderState = new OrderState(3, orderId, State.KEEP, LocalDate.now().minusDays(5));
 
-        if (currentOrderState.getStateId() == stateId) {
+        OrderState currentOrderState = this.getCurrentStateOfOrderById(orderId);
+
+        if (currentOrderState != null && currentOrderState.getStateId() == stateId) {
             return currentOrderState;
         }
 
         fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState newOrderState =
                 this.orderStateRepository.save(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(
-                        currentOrderState.getOrderId(),
+                        orderId,
                         stateId
                 ));
 
         return new OrderState(newOrderState.getId(), newOrderState.getOrderId(), newOrderState.getStateId(), newOrderState.getDate());
+    }
+
+    public OrderState getCurrentStateOfOrderById(Integer orderId) {
+        List<OrderState> orderStates = this.getCurrentStateOrders();
+
+        try {
+            return orderStates
+                    .stream()
+                    .filter(orderState -> orderState.getOrderId().equals(orderId))
+                    .collect(Collectors.toList())
+                    .get(0);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     @Override
