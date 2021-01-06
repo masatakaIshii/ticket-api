@@ -27,12 +27,13 @@ public class MySQLOrderDao implements OrderDao {
     }
 
     @Override
-    public List<Order> getOrdersByUserId(Long userId) {
+    public List<Order> getOrdersByUserId(Integer userId) {
         return null;
     }
 
     @Override
-    public Order getOrderByOrderIdAndUserId(Long userId, Long orderId) {
+    public Order getOrderByOrderIdAndUserId(Integer userId, Integer orderId) {
         return null;
     }
+
 }

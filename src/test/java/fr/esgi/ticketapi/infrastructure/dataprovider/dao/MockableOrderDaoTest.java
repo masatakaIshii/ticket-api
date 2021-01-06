@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -37,9 +38,9 @@ class MockableOrderDaoTest {
         Mockito.when(mockRestTemplateBuilder.build()).thenReturn(mockRestTemplate);
         mockableOrderDao = new MockableOrderDao(mockRestTemplateBuilder);
 
-        firstOrders = new ArrayList<Order>();
+        firstOrders = new ArrayList<>();
         firstOrders.add(new Order(1, 2, 3));
-        secondOrders = new ArrayList<Order>();
+        secondOrders = new ArrayList<>();
         secondOrders.add(new Order(4, 5, 6));
 
         Mockito.when(mockRestTemplate.getForEntity(MOCKABLE_URL_FIRST_USER_ORDER, Order[].class))
@@ -85,5 +86,36 @@ class MockableOrderDaoTest {
 
         var result = mockableOrderDao.getOrders();
         assertTrue(result.size() == allOrders.size() && result.containsAll(allOrders) && allOrders.containsAll(result));
+    }
+
+    @Test
+    public void getOrdersByUserId_shouldCallRestTemplateToGetOrderListOfUserId() {
+        int userId = 1;
+        String url = "https://demo2009247.mockable.io/user/" + userId + "/order";
+        Mockito.when(mockRestTemplate.getForEntity(url, Order[].class))
+                .thenReturn(mockResponseOrders);
+        mockableOrderDao.getOrdersByUserId(1);
+        Mockito.verify(mockRestTemplate, Mockito.times(1))
+                .getForEntity("https://demo2009247.mockable.io/user/1/order", Order[].class);
+    }
+
+    @Test
+    public void getOrdersByUserId_shouldReturnOrderListOfOtherUserId() {
+        int userId = 2;
+        String url = "https://demo2009247.mockable.io/user/" + userId + "/order";
+        var userOrders = new ArrayList<Order>();
+
+        userOrders.add(new Order(2, 2, 2));
+        userOrders.add(new Order(3, 3, 2));
+        userOrders.add(new Order(4, 4, 2));
+        Mockito.when(mockRestTemplate.getForEntity(url, Order[].class))
+                .thenReturn(mockResponseOrders);
+        Mockito.when(mockResponseOrders.getBody())
+                .thenReturn(userOrders.toArray(Order[]::new));
+
+        var result = mockableOrderDao.getOrdersByUserId(userId);
+        assertEquals(userOrders.size(), result.size());
+        assertTrue(result.containsAll(userOrders));
+        assertTrue(userOrders.containsAll(result));
     }
 }

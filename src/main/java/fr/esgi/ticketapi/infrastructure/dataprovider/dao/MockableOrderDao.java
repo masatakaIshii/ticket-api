@@ -43,12 +43,13 @@ public class MockableOrderDao implements OrderDao {
     }
 
     @Override
-    public List<Order> getOrdersByUserId(Long userId) {
-        return null;
+    public List<Order> getOrdersByUserId(Integer userId) {
+        var url = MOCKABLE_URL + "user/" + userId + "/order";
+        return fetchListOrdersByUrl(url);
     }
 
     @Override
-    public Order getOrderByOrderIdAndUserId(Long userId, Long orderId) {
+    public Order getOrderByOrderIdAndUserId(Integer userId, Integer orderId) {
         return null;
     }
 
