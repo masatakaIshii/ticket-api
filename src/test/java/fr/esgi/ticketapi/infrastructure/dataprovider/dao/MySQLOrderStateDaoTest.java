@@ -16,9 +16,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class MockableOrderStateDaoTest {
+class MySQLOrderStateDaoTest {
 
-    MockableOrderStateDao mockableOrderStateDao;
+    MySQLOrderStateDao mySQLOrderStateDao;
 
     OrderState orderStateAlreadyKept;
     fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState newOrderStateRefund;
@@ -30,7 +30,7 @@ class MockableOrderStateDaoTest {
 
     @BeforeEach
     public void setup() {
-        mockableOrderStateDao = new MockableOrderStateDao(mockOrderStateRepository);
+        mySQLOrderStateDao = new MySQLOrderStateDao(mockOrderStateRepository);
 
         orderStateAlreadyKept = new OrderState(3, 2, State.KEEP, LocalDate.now().minusDays(5));
         orderStateKeptForRefundTest = new OrderState(6, 3, State.KEEP, LocalDate.now().minusDays(5));
@@ -47,14 +47,14 @@ class MockableOrderStateDaoTest {
 
         Mockito.when(mockOrderStateRepository.getAll()).thenReturn(orderStates);
 
-        OrderState result = mockableOrderStateDao.changeOrderState(orderStateAlreadyKept.getOrderId(), State.KEEP);
+        OrderState result = mySQLOrderStateDao.changeOrderState(orderStateAlreadyKept.getOrderId(), State.KEEP);
         assertEquals(orderStateAlreadyKept, result);
     }
 
     @Test
     public void changeState_should_change_state_if_different_state() {
         Mockito.when(mockOrderStateRepository.save(Mockito.any(fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState.class))).thenReturn(newOrderStateRefund);
-        OrderState result = mockableOrderStateDao.changeOrderState(orderStateKeptForRefundTest.getOrderId(), State.REFUND);
+        OrderState result = mySQLOrderStateDao.changeOrderState(orderStateKeptForRefundTest.getOrderId(), State.REFUND);
         assertEquals(orderStateRefundForRefundTest, result);
     }
 
@@ -72,13 +72,13 @@ class MockableOrderStateDaoTest {
         OrderState expected = new OrderState(4, 4, State.REFUND, LocalDate.now());
 
         Mockito.when(mockOrderStateRepository.save(Mockito.any(fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState.class))).thenReturn(newOrderState);
-        OrderState result = mockableOrderStateDao.changeOrderState(orderStateKeptForRefundTest.getOrderId(), State.REFUND);
+        OrderState result = mySQLOrderStateDao.changeOrderState(orderStateKeptForRefundTest.getOrderId(), State.REFUND);
         assertEquals(expected, result);
     }
 
     @Test
     public void getCurrentStateOrderById_should_call_repo_get_all_once() {
-        mockableOrderStateDao.getCurrentStateOfOrderById(1);
+        mySQLOrderStateDao.getCurrentStateOfOrderById(1);
         Mockito.verify(mockOrderStateRepository, Mockito.times(1)).getAll();
     }
 
@@ -93,7 +93,7 @@ class MockableOrderStateDaoTest {
 
         OrderState expected = new OrderState(3, 2, State.REFUND, LocalDate.now().minusDays(3));
 
-        assertEquals(expected, mockableOrderStateDao.getCurrentStateOfOrderById(expected.getOrderId()));
+        assertEquals(expected, mySQLOrderStateDao.getCurrentStateOfOrderById(expected.getOrderId()));
     }
 
     @Test
@@ -105,12 +105,12 @@ class MockableOrderStateDaoTest {
 
         Mockito.when(mockOrderStateRepository.getAll()).thenReturn(orderStates);
 
-        assertNull(mockableOrderStateDao.getCurrentStateOfOrderById(4));
+        assertNull(mySQLOrderStateDao.getCurrentStateOfOrderById(4));
     }
 
     @Test
     public void getCurrentStateOrders_should_call_repository_to_get_all_ordersStates() {
-        mockableOrderStateDao.getCurrentStateOrders();
+        mySQLOrderStateDao.getCurrentStateOrders();
         Mockito.verify(mockOrderStateRepository, Mockito.times(1)).getAll();
     }
 
@@ -126,7 +126,7 @@ class MockableOrderStateDaoTest {
         expectedList.add(new fr.esgi.ticketapi.core.entity.OrderState(3, 3, 1, LocalDate.now()));
         Mockito.when(mockOrderStateRepository.getAll()).thenReturn(orderStateList);
 
-        var result = mockableOrderStateDao.getCurrentStateOrders();
+        var result = mySQLOrderStateDao.getCurrentStateOrders();
 
         assertEquals(expectedList, result);
     }
@@ -141,7 +141,7 @@ class MockableOrderStateDaoTest {
         expectedList.add(new fr.esgi.ticketapi.core.entity.OrderState(3, 1, 1, LocalDate.now()));
         Mockito.when(mockOrderStateRepository.getAll()).thenReturn(orderStateList);
 
-        var result = mockableOrderStateDao.getCurrentStateOrders();
+        var result = mySQLOrderStateDao.getCurrentStateOrders();
 
         assertEquals(result.size(), 1);
         assertEquals(expectedList.get(0).getId(), result.get(0).getId());
@@ -162,7 +162,7 @@ class MockableOrderStateDaoTest {
         expectedList.add(new fr.esgi.ticketapi.core.entity.OrderState(6, 3, 2, LocalDate.now()));
         Mockito.when(mockOrderStateRepository.getAll()).thenReturn(orderStateList);
 
-        var result = mockableOrderStateDao.getCurrentStateOrders();
+        var result = mySQLOrderStateDao.getCurrentStateOrders();
 
         assertEquals(result.size(), 3);
         assertEquals(expectedList.get(0).getId(), result.get(0).getId());
