@@ -13,11 +13,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
-public class MockableOrderStateDao implements OrderStateDao {
+public class MySQLOrderStateDao implements OrderStateDao {
 
     private final OrderStateRepository orderStateRepository;
 
-    public MockableOrderStateDao(OrderStateRepository orderStateRepository) {
+    public MySQLOrderStateDao(OrderStateRepository orderStateRepository) {
         this.orderStateRepository = orderStateRepository;
     }
 
