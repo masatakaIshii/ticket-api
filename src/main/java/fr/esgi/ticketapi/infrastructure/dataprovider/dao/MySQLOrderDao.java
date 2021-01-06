@@ -25,4 +25,14 @@ public class MySQLOrderDao implements OrderDao {
                 .map(order -> order.asOrderEntity())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Order> getOrdersByUserId(Long userId) {
+        return null;
+    }
+
+    @Override
+    public Order getOrderByOrderIdAndUserId(Long userId, Long orderId) {
+        return null;
+    }
 }
