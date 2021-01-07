@@ -3,6 +3,7 @@ package fr.esgi.ticketapi.usecase.orderState;
 import fr.esgi.ticketapi.core.dao.OrderStateDao;
 import fr.esgi.ticketapi.core.entity.OrderState;
 import fr.esgi.ticketapi.core.entity.State;
+import fr.esgi.ticketapi.usecase.emails.SendEmail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -23,15 +24,24 @@ class AddOrderStatesTest {
     @Mock
     OrderStateDao mockOrderStateDao;
 
+    @Mock
+    SendEmail mockSendEmail;
+
     @BeforeEach
     public void setup() {
-        addOrderStates = new AddOrderStates(mockOrderStateDao);
+        addOrderStates = new AddOrderStates(mockOrderStateDao, mockSendEmail);
     }
 
     @Test
     void should_call_order_state_dao_once() {
         addOrderStates.execute(new ArrayList<>());
         Mockito.verify(mockOrderStateDao, Mockito.atLeastOnce()).addOrderStates(Mockito.anyList());
+    }
+
+    @Test
+    void should_call_send_email_after_added() {
+        addOrderStates.execute(new ArrayList<>());
+        Mockito.verify(mockSendEmail, Mockito.atLeastOnce()).execute(Mockito.anyString());
     }
 
     @Test

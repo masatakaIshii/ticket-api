@@ -3,6 +3,7 @@ package fr.esgi.ticketapi.usecase.orderState;
 import fr.esgi.ticketapi.core.dao.OrderStateDao;
 import fr.esgi.ticketapi.core.entity.OrderState;
 import fr.esgi.ticketapi.core.entity.State;
+import fr.esgi.ticketapi.usecase.emails.SendEmail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -22,10 +23,19 @@ class ChangeOrderStateToKeepTest {
     @Mock
     OrderStateDao mockOrderStateDao;
 
+    @Mock
+    SendEmail mockSendEmail;
+
     @BeforeEach
     public void setUp() {
         orderStateTested = new OrderState(3, 2, State.KEEP, LocalDate.now().minusDays(5));
-        changeOrderStateToKeep = new ChangeOrderStateToKeep(mockOrderStateDao);
+        changeOrderStateToKeep = new ChangeOrderStateToKeep(mockOrderStateDao, mockSendEmail);
+    }
+
+    @Test
+    void should_call_send_email_after_changing() {
+        changeOrderStateToKeep.execute(1);
+        Mockito.verify(mockSendEmail, Mockito.atLeastOnce()).execute(Mockito.anyString());
     }
 
     @Test
