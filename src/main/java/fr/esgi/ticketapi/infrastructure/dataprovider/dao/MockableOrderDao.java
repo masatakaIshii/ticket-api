@@ -18,7 +18,7 @@ public class MockableOrderDao implements OrderDao {
     private static final String FIRST_USER_PARAM = "user/123";
     private static final String SECOND_USER_PARAM = "user/456";
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     public MockableOrderDao(RestTemplateBuilder restTemplateBuilder) {
         restTemplate = restTemplateBuilder.build();
@@ -43,13 +43,17 @@ public class MockableOrderDao implements OrderDao {
     }
 
     @Override
-    public List<Order> getOrdersByUserId(Long userId) {
-        return null;
+    public List<Order> getOrdersByUserId(Integer userId) {
+        var url = MOCKABLE_URL + "user/" + userId + "/order";
+        return fetchListOrdersByUrl(url);
     }
 
     @Override
-    public Order getOrderByOrderIdAndUserId(Long userId, Long orderId) {
-        return null;
-    }
+    public Order getOrderByOrderIdAndUserId(Integer userId, Integer orderId) {
+        var url = MOCKABLE_URL + "user/" + userId + "/order";
 
+        return fetchListOrdersByUrl(url).stream()
+                .filter(order -> order.getId().equals(orderId))
+                .findFirst().orElse(null);
+    }
 }
