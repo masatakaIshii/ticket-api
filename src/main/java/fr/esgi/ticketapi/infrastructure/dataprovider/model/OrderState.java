@@ -4,6 +4,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 public class OrderState {
@@ -66,5 +67,18 @@ public class OrderState {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderState that = (OrderState) o;
+        return Objects.equals(id, that.id) && Objects.equals(orderId, that.orderId) && Objects.equals(stateId, that.stateId) && Objects.equals(date, that.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orderId, stateId, date);
     }
 }

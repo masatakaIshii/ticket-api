@@ -39,6 +39,55 @@ class MySQLOrderStateDaoTest {
     }
 
     @Test
+    public void addOrderStates_should_return_error_if_undefined_state() {
+        List<OrderState> orderStates = new ArrayList<>();
+        orderStates.add(new OrderState(1, 1, null, LocalDate.now()));
+        orderStates.add(new OrderState(2, 2, State.REFUND, LocalDate.now()));
+        orderStates.add(new OrderState(3, 3, State.KEEP, LocalDate.now()));
+
+        String result = mySQLOrderStateDao.addOrderStates(orderStates);
+        assertEquals("Some tickets don't have any answer", result);
+    }
+
+    @Test
+    public void addOrderStates_should_call_save_repo_if_no_error() {
+        List<OrderState> orderStates = new ArrayList<>();
+        orderStates.add(new OrderState(1, 1, State.REFUND, LocalDate.now()));
+        orderStates.add(new OrderState(2, 2, State.REFUND, LocalDate.now()));
+        orderStates.add(new OrderState(3, 3, State.KEEP, LocalDate.now()));
+
+        List<fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState> mySQLOrderStates = new ArrayList<>();
+        mySQLOrderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(1, State.REFUND));
+        mySQLOrderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(2, State.REFUND));
+        mySQLOrderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(3, State.KEEP));
+
+        mySQLOrderStateDao.addOrderStates(orderStates);
+        Mockito.verify(mockOrderStateRepository, Mockito.times(1)).saveAll(mySQLOrderStates);
+    }
+
+    @Test
+    public void addOrderStates_should_not_call_save_repo_if_error() {
+        List<OrderState> orderStates = new ArrayList<>();
+        orderStates.add(new OrderState(1, 1, null, LocalDate.now()));
+        orderStates.add(new OrderState(2, 2, State.REFUND, LocalDate.now()));
+        orderStates.add(new OrderState(3, 3, State.KEEP, LocalDate.now()));
+
+        mySQLOrderStateDao.addOrderStates(orderStates);
+        Mockito.verify(mockOrderStateRepository, Mockito.times(0)).saveAll(Mockito.anyList());
+    }
+
+    @Test
+    public void addOrderStates_should_return_OK_if_all_has_defined_state() {
+        List<OrderState> orderStates = new ArrayList<>();
+        orderStates.add(new OrderState(1, 1, State.KEEP, LocalDate.now()));
+        orderStates.add(new OrderState(2, 2, State.REFUND, LocalDate.now()));
+        orderStates.add(new OrderState(3, 3, State.KEEP, LocalDate.now()));
+
+        String result = mySQLOrderStateDao.addOrderStates(orderStates);
+        assertEquals("Your tickets have been registered", result);
+    }
+
+    @Test
     public void changeState_should_do_nothing_if_already_same_state() {
         List<fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState> orderStates = new ArrayList<>();
         orderStates.add(new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(1, 3, State.KEEP, LocalDate.now().minusDays(3)));

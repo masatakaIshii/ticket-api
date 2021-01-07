@@ -14,4 +14,6 @@ public interface OrderStateDao {
     List<OrderState> getStatesOfOrders();
 
     List<OrderState> getCurrentStateOrders();
+
+    String addOrderStates(List<OrderState> orderStates);
 }

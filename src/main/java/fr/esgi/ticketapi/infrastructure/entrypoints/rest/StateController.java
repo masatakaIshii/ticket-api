@@ -17,10 +17,11 @@ public class StateController {
     private GetCurrentStateOrders getCurrentStateOrders;
     private GetOrdersStates getOrdersStates;
     private GetOrderStates getOrderStates;
+    private AddOrderStates addOrderStates;
 
     public StateController(ChangeOrderStateToKeep changeOrderStateToKeep, ChangeOrderStateToRefund changeOrderStateToRefund,
                            DeleteOrdersStates deleteOrdersStates, GetCurrentStateOrders getCurrentStateOrders,
-                           GetOrdersStates getOrdersStates, GetOrderStates getOrderStates) {
+                           GetOrdersStates getOrdersStates, GetOrderStates getOrderStates, AddOrderStates addOrderStates) {
 
         this.changeOrderStateToKeep = changeOrderStateToKeep;
         this.changeOrderStateToRefund = changeOrderStateToRefund;
@@ -28,6 +29,7 @@ public class StateController {
         this.getCurrentStateOrders = getCurrentStateOrders;
         this.getOrdersStates = getOrdersStates;
         this.getOrderStates = getOrderStates;
+        this.addOrderStates = addOrderStates;
     }
 
     @GetMapping("")
@@ -53,6 +55,11 @@ public class StateController {
     @PostMapping("/keep/{id}")
     public OrderState changeOrderStateToKeep(@PathVariable(name = "id") Integer orderId) {
         return changeOrderStateToKeep.execute(orderId);
+    }
+
+    @PostMapping("")
+    public String addOrderStates(@RequestBody List<OrderState> orderStates) {
+        return addOrderStates.execute(orderStates);
     }
 
     @PostMapping("/refund/{id}")

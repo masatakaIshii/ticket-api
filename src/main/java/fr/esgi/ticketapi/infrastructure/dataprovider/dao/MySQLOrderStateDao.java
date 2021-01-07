@@ -4,6 +4,7 @@ import fr.esgi.ticketapi.core.dao.OrderStateDao;
 import fr.esgi.ticketapi.core.entity.OrderState;
 import fr.esgi.ticketapi.infrastructure.dataprovider.repository.OrderStateRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,28 @@ public class MySQLOrderStateDao implements OrderStateDao {
                 .filter(distinctByKey(OrderState::getOrderId))
                 .sorted(Comparator.comparing(OrderState::getId))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String addOrderStates(List<OrderState> orderStates) {
+        for (OrderState orderState : orderStates) {
+            if (orderState.getStateId() == null) {
+                return "Some tickets don't have any answer";
+            }
+        }
+
+        List<fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState> mySQLOrderStates =
+                orderStates
+                        .stream()
+                        .map(orderState ->
+                                new fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState(
+                                        orderState.getOrderId(), orderState.getStateId()
+                                ))
+                        .collect(Collectors.toList());
+
+        this.orderStateRepository.saveAll(mySQLOrderStates);
+
+        return "Your tickets have been registered";
     }
 
     private static <OrderState> Predicate<OrderState> distinctByKey(
