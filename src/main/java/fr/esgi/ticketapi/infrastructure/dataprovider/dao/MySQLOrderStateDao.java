@@ -105,6 +105,13 @@ public class MySQLOrderStateDao implements OrderStateDao {
         return "Your tickets have been registered";
     }
 
+    @Override
+    public List<OrderState> getStatesOfOrderIds(List<Integer> orderIds) {
+        List<fr.esgi.ticketapi.infrastructure.dataprovider.model.OrderState> ordersStates = this.orderStateRepository.getAllByOrderIds(orderIds);
+        return ordersStates.stream().map(orderState -> new OrderState(orderState.getId(), orderState.getOrderId(), orderState.getStateId(), orderState.getDate()))
+                .collect(Collectors.toList());
+    }
+
     private static <OrderState> Predicate<OrderState> distinctByKey(
             Function<? super OrderState, ?> keyExtractor) {
 

@@ -2,6 +2,7 @@ package fr.esgi.ticketapi.infrastructure.entrypoints.rest;
 
 
 import fr.esgi.ticketapi.core.entity.OrderState;
+import fr.esgi.ticketapi.core.entity.UserOrderState;
 import fr.esgi.ticketapi.usecase.orderState.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +19,11 @@ public class StateController {
     private GetOrdersStates getOrdersStates;
     private GetOrderStates getOrderStates;
     private AddOrderStates addOrderStates;
+    private GetOrdersStatsByUserIds getOrdersStatsByUserIds;
 
     public StateController(ChangeOrderStateToKeep changeOrderStateToKeep, ChangeOrderStateToRefund changeOrderStateToRefund,
                            DeleteOrdersStates deleteOrdersStates, GetCurrentStateOrders getCurrentStateOrders,
-                           GetOrdersStates getOrdersStates, GetOrderStates getOrderStates, AddOrderStates addOrderStates) {
+                           GetOrdersStates getOrdersStates, GetOrderStates getOrderStates, AddOrderStates addOrderStates, GetOrdersStatsByUserIds getOrdersStatsByUserIds) {
 
         this.changeOrderStateToKeep = changeOrderStateToKeep;
         this.changeOrderStateToRefund = changeOrderStateToRefund;
@@ -30,6 +32,7 @@ public class StateController {
         this.getOrdersStates = getOrdersStates;
         this.getOrderStates = getOrderStates;
         this.addOrderStates = addOrderStates;
+        this.getOrdersStatsByUserIds = getOrdersStatsByUserIds;
     }
 
     @GetMapping("")
@@ -40,6 +43,11 @@ public class StateController {
     @GetMapping("/{id}")
     public List<OrderState> getStatesOfOneOrder(@PathVariable(name = "id") Integer orderId) {
         return this.getOrderStates.execute(orderId);
+    }
+
+    @GetMapping("/users")
+    public List<UserOrderState> getStatesOfOrderfromUsers(@RequestParam("userIds") List<Integer> userIds) {
+        return this.getOrdersStatsByUserIds.execute(userIds);
     }
 
     @GetMapping("/current/{id}")
