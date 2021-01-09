@@ -12,4 +12,7 @@ public interface OrderStateRepository extends JpaRepository<OrderState, Long> {
 
     @Query(value = "select o from OrderState o order by o.orderId,o.date")
     List<OrderState> getAll();
+
+    @Query(value = "select o from OrderState o where o.orderId IN (:orderIds) order by o.date")
+    List<OrderState> getAllByOrderIds(List<Integer> orderIds);
 }

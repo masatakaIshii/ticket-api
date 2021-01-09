@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-@Service
+@Service("mockableOrderDao")
 public class MockableOrderDao implements OrderDao {
 
     private static final String MOCKABLE_URL = "https://demo2009247.mockable.io/";
