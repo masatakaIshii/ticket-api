@@ -112,6 +112,16 @@ public class MySQLOrderStateDao implements OrderStateDao {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<OrderState> getCurrentStatesOfOrderIds(List<Integer> orderIds) {
+        return this.orderStateRepository.getAllByOrderIds(orderIds).stream()
+                .map(orderState -> new OrderState(orderState.getId(), orderState.getOrderId(), orderState.getStateId(), orderState.getDate()))
+                .sorted((orderState1, orderState2) -> orderState2.getDate().compareTo(orderState1.getDate()))
+                .filter(distinctByKey(OrderState::getOrderId))
+                .sorted(Comparator.comparing(OrderState::getId))
+                .collect(Collectors.toList());
+    }
+
     private static <OrderState> Predicate<OrderState> distinctByKey(
             Function<? super OrderState, ?> keyExtractor) {
 

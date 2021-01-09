@@ -18,4 +18,6 @@ public interface OrderStateDao {
     String addOrderStates(List<OrderState> orderStates);
 
     List<OrderState> getStatesOfOrderIds(List<Integer> orderIds);
+
+    List<OrderState> getCurrentStatesOfOrderIds(List<Integer> orderIds);
 }

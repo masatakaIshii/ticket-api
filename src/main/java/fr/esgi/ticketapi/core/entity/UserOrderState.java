@@ -42,4 +42,12 @@ public class UserOrderState implements Serializable {
     public int hashCode() {
         return Objects.hash(userId, orderStates);
     }
+
+    @Override
+    public String toString() {
+        return "UserOrderState{" +
+                "userId=" + userId +
+                ", orderStates=" + orderStates +
+                '}';
+    }
 }
